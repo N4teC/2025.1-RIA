@@ -1,0 +1,189 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+
+<section class="section">
+  <div class="container">
+    <div class="has-text-centered mb-5">
+      <h1 class="title is-2 has-text-primary">
+        <i class="pi pi-shopping-cart mr-2"></i>Gerenciador de Produtos
+      </h1>
+      <p class="subtitle is-5 has-text-grey">
+        Operações CRUD
+      </p>
+    </div>
+
+    <div class="box">
+      <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="left">
+          <button
+            pButton
+            pRipple
+            label="Novo Produto"
+            icon="pi pi-plus"
+            class="p-button-success"
+            (click)="openNew()"
+          ></button>
+        </ng-template>
+        <ng-template pTemplate="right">
+          <span class="tag is-info is-medium">
+            Total: {{ produtos.length }} produtos
+          </span>
+        </ng-template>
+      </p-toolbar>
+
+      <p-table [value]="produtos" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Preço R$</th>
+            <th scope="col">Disponibilidade</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-produto>
+          <tr>
+            <td>{{ produto.nome }}</td>
+            <td>R$ {{ produto.preco?.toFixed(2) }}</td>
+            <td>
+              <span class="icon-text">
+                <span class="icon">
+                  <i
+                    class="pi"
+                    [ngClass]="{
+                      'pi-check-circle has-text-success': produto.disponivel,
+                      'pi-times-circle has-text-danger': !produto.disponivel
+                    }"
+                  ></i>
+                </span>
+                <span>{{
+                  produto.disponivel ? "Disponível" : "Indisponível"
+                }}</span>
+              </span>
+            </td>
+            <td>
+              <div class="buttons">
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-pencil"
+                  class="p-button-rounded p-button-info is-small"
+                  (click)="editProduto(produto)"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-danger is-small"
+                  (click)="deleteProduto(produto)"
+                ></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</section>
+
+<!-- Dialog para Inserir/Atualizar -->
+<p-dialog
+  [(visible)]="produtoDialog"
+  [style]="{ width: '450px' }"
+  [header]="isNewProduct ? 'Novo Produto' : 'Editar Produto'"
+  [modal]="true"
+  class="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div class="content">
+      <div class="field">
+        <label for="nome" class="label has-text-weight-semibold"
+          >Nome (String) *</label
+        >
+        <div class="control">
+          <input
+            type="text"
+            pInputText
+            class="input"
+            id="nome"
+            [(ngModel)]="produto.nome"
+            required
+            autofocus
+            [ngClass]="{ 'is-danger': submitted && !produto.nome }"
+            placeholder="Ex: Notebook Gamer"
+          />
+        </div>
+        <p class="help is-danger" *ngIf="submitted && !produto.nome">
+          Nome é obrigatório.
+        </p>
+      </div>
+
+      <div class="field">
+        <label for="preco" class="label has-text-weight-semibold"
+          >Preço (Number) *</label
+        >
+        <div class="control">
+          <p-inputNumber
+            id="preco"
+            [(ngModel)]="produto.preco"
+            [min]="0"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            [ngClass]="{ 'is-danger': submitted && !produto.preco }"
+            placeholder="R$ 0,00"
+          ></p-inputNumber>
+        </div>
+        <p class="help is-danger" *ngIf="submitted && !produto.preco">
+          Preço é obrigatório.
+        </p>
+      </div>
+
+      <div class="field">
+        <label for="disponivel" class="label has-text-weight-semibold"
+          >Disponível (Boolean)</label
+        >
+        <div class="field is-grouped">
+          <div class="control">
+            <p-inputSwitch
+              [(ngModel)]="produto.disponivel"
+              id="disponivel"
+            ></p-inputSwitch>
+          </div>
+          <div class="control">
+            <span
+              class="tag"
+              [ngClass]="produto.disponivel ? 'is-success' : 'is-warning'"
+            >
+              {{ produto.disponivel ? "Disponível" : "Indisponível" }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <div class="field is-grouped is-grouped-right">
+      <div class="control">
+        <button
+          pButton
+          pRipple
+          label="Cancelar"
+          icon="pi pi-times"
+          class="p-button-text"
+          (click)="hideDialog()"
+        ></button>
+      </div>
+      <div class="control">
+        <button
+          pButton
+          pRipple
+          [label]="isNewProduct ? 'Criar' : 'Salvar'"
+          icon="pi pi-check"
+          class="p-button-primary"
+          (click)="saveProduto()"
+        ></button>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

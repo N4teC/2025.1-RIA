@@ -1,0 +1,13 @@
+/* Importando Bulma CSS */
+@import "bulma/css/bulma.min.css";
+
+/* Importando apenas os ícones do PrimeNG */
+@import "primeicons/primeicons.css";
+
+/* Reset básico */
+body {
+  margin: 0;
+  font-family: "BlinkMacSystemFont", -apple-system, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    "Helvetica", "Arial", sans-serif;
+}
