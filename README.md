@@ -4,8 +4,6 @@
 
 **Repositório para a matéria de Aplicações com Interfaces Ricas, ofertada pelo curso de TADS no IFRN-CNAT no ano de 2025.1.**
 
-Este repositório contém o projeto desenvolvido para a disciplina, com foco em tecnologias modernas de desenvolvimento web, interfaces de usuário ricas e experiência do usuário.
-
 ## 🛒 Gerenciador de Produtos - Angular + PrimeNG + Bulma
 
 ### 📋 Sobre o Projeto
