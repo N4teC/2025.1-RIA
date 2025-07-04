@@ -1,0 +1,102 @@
+<p-dialog
+  [(visible)]="visible"
+  (visibleChange)="onVisibleChange($event)"
+  [style]="{ width: '450px' }"
+  header="Novo Produto"
+  [modal]="true"
+  class="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <div class="content">
+      <div class="field">
+        <label for="nome" class="label has-text-weight-semibold"
+          >Nome (String) *</label
+        >
+        <div class="control">
+          <input
+            type="text"
+            pInputText
+            class="input"
+            id="nome"
+            [(ngModel)]="produto.nome"
+            required
+            autofocus
+            [ngClass]="{ 'is-danger': submitted && !produto.nome }"
+            placeholder="Ex: Notebook Gamer"
+          />
+        </div>
+        <p class="help is-danger" *ngIf="submitted && !produto.nome">
+          Nome é obrigatório.
+        </p>
+      </div>
+
+      <div class="field">
+        <label for="preco" class="label has-text-weight-semibold"
+          >Preço (Number) *</label
+        >
+        <div class="control">
+          <p-inputNumber
+            id="preco"
+            [(ngModel)]="produto.preco"
+            [min]="0"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            [ngClass]="{ 'is-danger': submitted && !produto.preco }"
+            placeholder="R$ 0,00"
+          ></p-inputNumber>
+        </div>
+        <p class="help is-danger" *ngIf="submitted && !produto.preco">
+          Preço é obrigatório.
+        </p>
+      </div>
+
+      <div class="field">
+        <label for="disponivel" class="label has-text-weight-semibold"
+          >Disponível (Boolean)</label
+        >
+        <div class="field is-grouped">
+          <div class="control">
+            <p-inputSwitch
+              [(ngModel)]="produto.disponivel"
+              id="disponivel"
+            ></p-inputSwitch>
+          </div>
+          <div class="control">
+            <span
+              class="tag"
+              [ngClass]="produto.disponivel ? 'is-success' : 'is-warning'"
+            >
+              {{ produto.disponivel ? "Disponível" : "Indisponível" }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <div class="field is-grouped is-grouped-right">
+      <div class="control">
+        <button
+          pButton
+          pRipple
+          label="Cancelar"
+          icon="pi pi-times"
+          class="p-button-text"
+          (click)="onCancelar()"
+        ></button>
+      </div>
+      <div class="control">
+        <button
+          pButton
+          pRipple
+          label="Criar"
+          icon="pi pi-check"
+          class="p-button-primary"
+          (click)="onSalvar()"
+        ></button>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

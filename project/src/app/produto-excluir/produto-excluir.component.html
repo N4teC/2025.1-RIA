@@ -1,0 +1,80 @@
+<p-dialog
+  [(visible)]="visible"
+  (visibleChange)="onVisibleChange($event)"
+  [style]="{ width: '450px' }"
+  header="Confirmar Exclusão"
+  [modal]="true"
+>
+  <ng-template pTemplate="content">
+    <div class="content">
+      <div class="notification is-warning is-light">
+        <p class="has-text-centered">
+          <i class="pi pi-exclamation-triangle has-text-warning" style="font-size: 3rem;"></i>
+        </p>
+        <p class="has-text-centered has-text-weight-semibold">
+          Você tem certeza que deseja excluir este produto?
+        </p>
+      </div>
+
+      <div class="box">
+        <div class="field">
+          <label class="label" for="excluir-produto-nome">Nome:</label>
+          <p class="control">
+            <span id="excluir-produto-nome" class="tag is-light is-large">{{ produto.nome }}</span>
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="label" for="excluir-produto-preco">Preço:</label>
+          <p class="control">
+            <span id="excluir-produto-preco" class="tag is-info is-large">R$ {{ produto.preco.toFixed(2) }}</span>
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="label" for="excluir-produto-disponivel">Disponível:</label>
+          <p class="control">
+            <span 
+              id="excluir-produto-disponivel"
+              class="tag is-large"
+              [ngClass]="produto.disponivel ? 'is-success' : 'is-danger'"
+            >
+              {{ produto.disponivel ? "Disponível" : "Indisponível" }}
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <div class="notification is-danger is-light">
+        <p class="has-text-centered has-text-weight-semibold">
+          ⚠️ Esta ação não pode ser desfeita!
+        </p>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <div class="field is-grouped is-grouped-right">
+      <div class="control">
+        <button
+          pButton
+          pRipple
+          label="Cancelar"
+          icon="pi pi-times"
+          class="p-button-text"
+          (click)="onCancelar()"
+        ></button>
+      </div>
+      <div class="control">
+        <button
+          pButton
+          pRipple
+          label="Confirmar Exclusão"
+          icon="pi pi-trash"
+          class="p-button-danger"
+          (click)="onConfirmar()"
+        ></button>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

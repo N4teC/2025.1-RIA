@@ -1,0 +1,64 @@
+<p-dialog
+  [(visible)]="visible"
+  (visibleChange)="onVisibleChange($event)"
+  [style]="{ width: '500px' }"
+  header="Detalhes do Produto"
+  [modal]="true"
+>
+  <ng-template pTemplate="content">
+    <div class="content">
+      <div class="field">
+        <label class="label has-text-weight-semibold" for="produto-id">ID:</label>
+        <p class="control">
+          <span id="produto-id" class="tag is-primary">{{ produto.id }}</span>
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label has-text-weight-semibold" for="produto-nome">Nome (String):</label>
+        <p class="control">
+          <span id="produto-nome" class="tag is-light is-large">{{ produto.nome }}</span>
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label has-text-weight-semibold" for="produto-preco">Preço (Number):</label>
+        <p class="control">
+          <span id="produto-preco" class="tag is-info is-large">R$ {{ produto.preco.toFixed(2) }}</span>
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label has-text-weight-semibold" for="produto-disponivel">Disponível (Boolean):</label>
+        <p class="control">
+          <span 
+            id="produto-disponivel"
+            class="tag is-large"
+            [ngClass]="produto.disponivel ? 'is-success' : 'is-danger'"
+          >
+            <i 
+              class="pi mr-2"
+              [ngClass]="produto.disponivel ? 'pi-check-circle' : 'pi-times-circle'"
+            ></i>
+            {{ produto.disponivel ? "Disponível" : "Indisponível" }}
+          </span>
+        </p>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <div class="field is-grouped is-grouped-right">
+      <div class="control">
+        <button
+          pButton
+          pRipple
+          label="Fechar"
+          icon="pi pi-times"
+          class="p-button-secondary"
+          (click)="onFechar()"
+        ></button>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

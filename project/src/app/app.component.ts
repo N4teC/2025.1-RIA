@@ -1,51 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { InputSwitchModule } from 'primeng/inputswitch';
-import { ToolbarModule } from 'primeng/toolbar';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { PanelModule } from 'primeng/panel';
 import { Produto } from './model/produto.model';
+import { ProdutoListarComponent } from './produto-listar/produto-listar.component';
+import { ProdutoInserirComponent } from './produto-inserir/produto-inserir.component';
+import { ProdutoAtualizarComponent } from './produto-atualizar/produto-atualizar.component';
+import { ProdutoDetalharComponent } from './produto-detalhar/produto-detalhar.component';
+import { ProdutoExcluirComponent } from './produto-excluir/produto-excluir.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    TableModule,
-    ButtonModule,
-    DialogModule,
-    InputTextModule,
-    InputNumberModule,
-    InputSwitchModule,
-    ToolbarModule,
-    ConfirmDialogModule,
     ToastModule,
-    PanelModule,
+    ProdutoListarComponent,
+    ProdutoInserirComponent,
+    ProdutoAtualizarComponent,
+    ProdutoDetalharComponent,
+    ProdutoExcluirComponent
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [MessageService],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
   produtos: Produto[] = [];
-  produtoDialog: boolean = false;
-  produto: Produto = { nome: '', preco: 0, disponivel: false };
-  submitted: boolean = false;
-  isNewProduct: boolean = false;
+  
+  // Estados dos dialogs
+  dialogInserir: boolean = false;
+  dialogAtualizar: boolean = false;
+  dialogDetalhar: boolean = false;
+  dialogExcluir: boolean = false;
+  
+  // Produto selecionado para edição/visualização/exclusão
+  produtoSelecionado: Produto = { nome: '', preco: 0, disponivel: false };
 
-  constructor(
-    private readonly confirmationService: ConfirmationService,
-    private readonly messageService: MessageService
-  ) {}
+  constructor(private readonly messageService: MessageService) {}
 
   ngOnInit() {
     this.produtos = [
@@ -70,73 +62,72 @@ export class AppComponent implements OnInit {
     ];
   }
 
-  openNew() {
-    this.produto = { nome: '', preco: 0, disponivel: false };
-    this.submitted = false;
-    this.isNewProduct = true;
-    this.produtoDialog = true;
+  // Eventos do componente de listagem
+  onNovoProduto() {
+    this.dialogInserir = true;
   }
 
-  editProduto(produto: Produto) {
-    this.produto = { ...produto };
-    this.isNewProduct = false;
-    this.produtoDialog = true;
+  onEditarProduto(produto: Produto) {
+    this.produtoSelecionado = { ...produto };
+    this.dialogAtualizar = true;
   }
 
-  hideDialog() {
-    this.produtoDialog = false;
-    this.submitted = false;
+  onDetalharProduto(produto: Produto) {
+    this.produtoSelecionado = { ...produto };
+    this.dialogDetalhar = true;
   }
 
-  saveProduto() {
-    this.submitted = true;
+  onExcluirProduto(produto: Produto) {
+    this.produtoSelecionado = { ...produto };
+    this.dialogExcluir = true;
+  }
 
-    if (this.produto.nome?.trim() && this.produto.preco > 0) {
-      if (this.isNewProduct) {
-        this.produto.id = this.createId();
-        this.produtos.push(this.produto);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sucesso',
-          detail: 'Produto Criado',
-        });
-      } else {
-        const index = this.produtos.findIndex((p) => p.id === this.produto.id);
-        if (index > -1) {
-          this.produtos[index] = this.produto;
-        }
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sucesso',
-          detail: 'Produto Atualizado',
-        });
-      }
+  // Eventos do componente de inserção
+  onProdutoInserido(produto: Produto) {
+    produto.id = this.createId();
+    this.produtos.push(produto);
+    this.produtos = [...this.produtos];
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Sucesso',
+      detail: 'Produto criado com sucesso!',
+    });
+  }
 
+  // Eventos do componente de atualização
+  onProdutoAtualizado(produto: Produto) {
+    const index = this.produtos.findIndex((p) => p.id === produto.id);
+    if (index > -1) {
+      this.produtos[index] = produto;
       this.produtos = [...this.produtos];
-      this.produtoDialog = false;
-      this.produto = { nome: '', preco: 0, disponivel: false };
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Sucesso',
+        detail: 'Produto atualizado com sucesso!',
+      });
     }
   }
 
-  deleteProduto(produto: Produto) {
-    this.confirmationService.confirm({
-      message: 'Você tem certeza que deseja remover ' + produto.nome + '?',
-      header: 'Confirmar',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sim',
-      rejectLabel: 'Não',
-      accept: () => {
-        this.produtos = this.produtos.filter((p) => p.id !== produto.id);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sucesso',
-          detail: 'Produto Removido',
-        });
-      },
+  // Eventos do componente de exclusão
+  onProdutoExcluido(produto: Produto) {
+    this.produtos = this.produtos.filter((p) => p.id !== produto.id);
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Sucesso',
+      detail: 'Produto excluído com sucesso!',
     });
   }
 
   private createId(): number {
-    return Math.floor(Math.random() * 1000) + 1;
+    if (this.produtos.length === 0) {
+      return 1;
+    }
+    for (let i = 0; i < this.produtos.length; i++) {
+      if (this.produtos[i].id === i + 1) {
+        continue;
+      }
+      return i + 1;
+    }
+    return this.produtos.length + 1;
   }
 }

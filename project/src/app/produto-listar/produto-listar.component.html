@@ -1,0 +1,80 @@
+<div class="box">
+  <p-toolbar styleClass="mb-4">
+    <ng-template pTemplate="left">
+      <button
+        pButton
+        pRipple
+        label="Novo Produto"
+        icon="pi pi-plus"
+        class="p-button-success"
+        (click)="onNovoProduto()"
+      ></button>
+    </ng-template>
+    <ng-template pTemplate="right">
+      <span class="tag is-info is-medium">
+        Total: {{ produtos.length }} produtos
+      </span>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table [value]="produtos" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th scope="col">Nome</th>
+        <th scope="col">Preço R$</th>
+        <th scope="col">Disponibilidade</th>
+        <th scope="col">Ações</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-produto>
+      <tr>
+        <td>{{ produto.nome }}</td>
+        <td>R$ {{ produto.preco.toFixed(2) }}</td>
+        <td>
+          <span class="icon-text">
+            <span class="icon">
+              <i
+                class="pi"
+                [ngClass]="{
+                  'pi-check-circle has-text-success': produto.disponivel,
+                  'pi-times-circle has-text-danger': !produto.disponivel
+                }"
+              ></i>
+            </span>
+            <span>{{
+              produto.disponivel ? "Disponível" : "Indisponível"
+            }}</span>
+          </span>
+        </td>
+        <td>
+          <div class="buttons">
+            <button
+              pButton
+              pRipple
+              icon="pi pi-eye"
+              class="p-button-rounded p-button-secondary is-small"
+              (click)="onDetalharProduto(produto)"
+              pTooltip="Visualizar"
+            ></button>
+            <button
+              pButton
+              pRipple
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-info is-small"
+              (click)="onEditarProduto(produto)"
+              pTooltip="Editar"
+            ></button>
+            <button
+              pButton
+              pRipple
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-danger is-small"
+              (click)="onExcluirProduto(produto)"
+              pTooltip="Excluir"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
