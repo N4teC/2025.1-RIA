@@ -4,27 +4,29 @@
 
 **Repositório para a matéria de Aplicações com Interfaces Ricas, ofertada pelo curso de TADS no IFRN-CNAT no ano de 2025.1.**
 
-## 🛒 Gerenciador de Produtos - Angular + PrimeNG + Bulma
+## 🛒 Gerenciador de Produtos - Angular + PrimeNG (Componentizado)
 
 ### 📋 Sobre o Projeto
 
-Uma aplicação web desenvolvida em **Angular 19** que implementa um sistema completo de **CRUD (Create, Read, Update, Delete)** para gerenciamento de produtos. Esta implementação atende aos requisitos da atividade da disciplina.
+Uma aplicação web desenvolvida em **Angular 19** que implementa um sistema completo de **CRUD (Create, Read, Update, Delete)** para gerenciamento de produtos, agora **refatorado em componentes separados** com comunicação via **@Input e @Output**. Esta implementação atende aos requisitos da atividade de componentização da disciplina.
 
 ### 🎯 Objetivos da Atividade Atendidos
 
-✅ **Criar um projeto Angular 19** (PrimeNG ainda não é compatível com Angular 20)  
-✅ **Incluir uma biblioteca de componentes UI Angular** (PrimeNG)  
-✅ **Implementar operações CRUD completas** (inserir, atualizar, detalhar, remover, listar)  
+✅ **Reutilizar projeto Angular da tarefa anterior**  
+✅ **Manter biblioteca de componentes UI Angular** (PrimeNG)  
+✅ **Atualizar para Angular 19 e PrimeNG 19**  
+✅ **Refatorar em componentes separados**: inserir, atualizar, detalhar e listar  
+✅ **Implementar comunicação com @Input e @Output**  
 ✅ **Modelo com 3 tipos de atributos**: string, número e booleano
 
 ## 🚀 Tecnologias Utilizadas
 
 - **Angular 19** - Framework principal
-- **PrimeNG 19.1.3** - Biblioteca de componentes UI
-- **Bulma CSS** - Framework CSS para estilização
+- **PrimeNG 19** - Biblioteca de componentes UI (atualizada)
 - **TypeScript** - Linguagem de programação
 - **RxJS** - Programação reativa
 - **FormsModule** - Manipulação de formulários
+- **@Input/@Output** - Comunicação entre componentes
 
 ## 📦 Modelo de Dados
 
@@ -77,20 +79,85 @@ export interface Produto {
 - **Validação de Formulários** em tempo real
 - **Ícones Intuitivos** do PrimeIcons
 
-## 🏗️ Arquitetura do Projeto
+## 🏗️ Arquitetura do Projeto (Componentizada)
 
 ```
 project/src/
 ├── app/
 │   ├── model/
-│   │   └── produto.model.ts     # Interface do modelo
-│   ├── app.component.ts         # Componente principal
+│   │   └── produto.model.ts          # Interface do modelo
+│   ├── produto-listar/
+│   │   ├── produto-listar.component.ts    # Componente de listagem
+│   │   ├── produto-listar.component.html  # Template de listagem
+│   │   ├── produto-listar.component.css   # Estilos de listagem
+│   │   └── produto-listar.component.spec.ts
+│   ├── produto-inserir/
+│   │   ├── produto-inserir.component.ts   # Componente de inserção
+│   │   ├── produto-inserir.component.html # Template de inserção
+│   │   ├── produto-inserir.component.css  # Estilos de inserção
+│   │   └── produto-inserir.component.spec.ts
+│   ├── produto-atualizar/
+│   │   ├── produto-atualizar.component.ts   # Componente de atualização
+│   │   ├── produto-atualizar.component.html # Template de atualização
+│   │   ├── produto-atualizar.component.css  # Estilos de atualização
+│   │   └── produto-atualizar.component.spec.ts
+│   ├── produto-detalhar/
+│   │   ├── produto-detalhar.component.ts   # Componente de detalhes
+│   │   ├── produto-detalhar.component.html # Template de detalhes
+│   │   ├── produto-detalhar.component.css  # Estilos de detalhes
+│   │   └── produto-detalhar.component.spec.ts
+│   ├── produto-excluir/
+│   │   ├── produto-excluir.component.ts   # Componente de exclusão
+│   │   ├── produto-excluir.component.html # Template de exclusão
+│   │   ├── produto-excluir.component.css  # Estilos de exclusão
+│   │   └── produto-excluir.component.spec.ts
+│   ├── app.component.ts         # Componente principal (orquestrador)
 │   ├── app.component.html       # Template da aplicação
-│   ├── app.component.css        # Estilos (apenas comentários)
+│   ├── app.component.css        # Estilos globais
 │   ├── app.config.ts           # Configuração do PrimeNG
 │   └── app.routes.ts           # Rotas da aplicação
-├── styles.css                  # Estilos globais (Bulma + PrimeIcons)
+├── styles.css                  # Estilos globais (PrimeNG Themes)
 └── main.ts                     # Ponto de entrada
+```
+
+## 🔗 Comunicação entre Componentes
+
+### @Input - Entrada de Dados
+
+```typescript
+// Nos componentes filhos, recebem dados do componente pai
+@Input() produto?: Produto;           // Produto a ser editado/detalhado
+@Input() produtos: Produto[] = [];    // Lista de produtos
+@Input() visible: boolean = false;    // Controle de visibilidade
+```
+
+### @Output - Emissão de Eventos
+
+```typescript
+// Nos componentes filhos, emitem eventos para o componente pai
+@Output() produtoAdicionado = new EventEmitter<Produto>();
+@Output() produtoAtualizado = new EventEmitter<Produto>();
+@Output() produtoExcluido = new EventEmitter<number>();
+@Output() modalFechado = new EventEmitter<void>();
+```
+
+### Fluxo de Comunicação
+
+```
+AppComponent (Pai)
+├── gerencia array de produtos
+├── controla visibilidade dos modais
+└── escuta eventos dos componentes filhos
+    ├── ProdutoListarComponent
+    │   └── emite eventos de ação (editar, excluir, detalhar)
+    ├── ProdutoInserirComponent
+    │   └── emite evento de produto adicionado
+    ├── ProdutoAtualizarComponent
+    │   └── emite evento de produto atualizado
+    ├── ProdutoDetalharComponent
+    │   └── recebe produto via @Input
+    └── ProdutoExcluirComponent
+        └── emite evento de produto excluído
 ```
 
 ## 🚀 Como Executar o Projeto
@@ -132,28 +199,45 @@ http://localhost:4200
 
 ## 📚 Componentes PrimeNG Utilizados
 
-| Componente        | Função                        |
-| ----------------- | ----------------------------- |
-| `p-table`         | Exibição da lista de produtos |
-| `p-dialog`        | Modal para inserir/editar     |
-| `p-toolbar`       | Barra de ferramentas          |
-| `p-toast`         | Notificações de feedback      |
-| `p-confirmDialog` | Confirmação de exclusão       |
-| `p-inputText`     | Campo de texto                |
-| `p-inputNumber`   | Campo numérico                |
-| `p-inputSwitch`   | Campo booleano                |
-| `p-button`        | Botões com efeitos            |
+| Componente        | Função                        | Componente Usado          |
+| ----------------- | ----------------------------- | ------------------------- |
+| `p-table`         | Exibição da lista de produtos | ProdutoListarComponent    |
+| `p-dialog`        | Modal para inserir/editar     | Todos os modais           |
+| `p-toolbar`       | Barra de ferramentas          | AppComponent              |
+| `p-toast`         | Notificações de feedback      | AppComponent              |
+| `p-confirmDialog` | Confirmação de exclusão       | ProdutoExcluirComponent   |
+| `p-inputText`     | Campo de texto                | Inserir/Atualizar         |
+| `p-inputNumber`   | Campo numérico                | Inserir/Atualizar         |
+| `p-inputSwitch`   | Campo booleano                | Inserir/Atualizar         |
+| `p-button`        | Botões com efeitos            | Todos os componentes      |
 
-## 🎨 Classes Bulma Utilizadas
+## 🎨 Vantagens da Componentização
 
-| Categoria       | Classes                                           |
+### ✅ **Benefícios Implementados**
+
+- **Separação de Responsabilidades** - Cada componente tem uma função específica
+- **Reutilização de Código** - Componentes podem ser reutilizados em outras partes
+- **Facilidade de Manutenção** - Mudanças isoladas em cada componente
+- **Testabilidade** - Cada componente pode ser testado individualmente
+- **Comunicação Clara** - @Input/@Output definem contratos claros
+- **Organização Melhorada** - Código mais estruturado e legível
+
+### 🔧 **Estrutura Modular**
+
+```typescript
+// Exemplo de comunicação entre componentes
+// App Component (Pai) -> Produto Inserir (Filho)
+onProdutoAdicionado(produto: Produto) {
+  this.produtos.push(produto);
+  this.showInserirDialog = false;
+  this.messageService.add({
+    severity: 'success',
+    summary: 'Sucesso',
+    detail: 'Produto adicionado com sucesso!'
+  });
+}
+```
 | --------------- | ------------------------------------------------- |
-| **Layout**      | `section`, `container`, `box`, `field`, `control` |
-| **Tipografia**  | `title`, `subtitle`, `label`, `has-text-*`        |
-| **Espaçamento** | `mb-5`, `mr-2`, `is-grouped`                      |
-| **Componentes** | `tag`, `buttons`, `help`                          |
-| **Estados**     | `is-danger`, `is-success`, `is-warning`           |
-
 ## 🔧 Configurações Importantes
 
 ### PrimeNG Theme
@@ -171,115 +255,118 @@ providePrimeNG({
 
 ```css
 /* styles.css */
-@import "bulma/css/bulma.min.css";
 @import "primeicons/primeicons.css";
+/* Tema do PrimeNG aplicado automaticamente */
 ```
 
-## 📋 Simplificações Implementadas
+## � Refatoração Realizada
 
-### 🔧 Simplificações para Fins Didáticos
+### 🏗️ **De Monolítico para Componentizado**
 
-### 1. **Armazenamento de Dados**
+#### Antes (Versão Anterior):
+```
+✅ Um único AppComponent com toda a lógica
+❌ Dificuldade de manutenção
+❌ Código acoplado
+❌ Testes complexos
+```
 
-❌ **Não implementado:** Banco de dados real  
-✅ **Simplificado:** Dados em memória (array local)  
-📝 **Justificativa:** Foco na implementação do CRUD e UI, não em persistência
+#### Agora (Versão Componentizada):
+```
+✅ 5 componentes especializados
+✅ Comunicação via @Input/@Output
+✅ Lógica separada por responsabilidade
+✅ Fácil manutenção e teste
+```
 
-### 2. **Autenticação e Autorização**
+### 🔄 **Componentes Criados**
 
-❌ **Não implementado:** Sistema de login/usuários  
-✅ **Simplificado:** Acesso direto às funcionalidades  
-📝 **Justificativa:** Não é requisito da atividade
+1. **ProdutoListarComponent** - Exibe a tabela de produtos
+2. **ProdutoInserirComponent** - Modal para adicionar produtos
+3. **ProdutoAtualizarComponent** - Modal para editar produtos
+4. **ProdutoDetalharComponent** - Modal para visualizar detalhes
+5. **ProdutoExcluirComponent** - Modal para confirmar exclusão
 
-### 3. **Roteamento**
+### 📡 **Padrões de Comunicação Implementados**
 
-❌ **Não implementado:** Múltiplas páginas/rotas  
-✅ **Simplificado:** Single Page Application (SPA)  
-📝 **Justificativa:** Foco no CRUD em um único componente
-
-### 4. **Estrutura de Projeto**
-
-❌ **Não implementado:** Múltiplos módulos e serviços  
-✅ **Simplificado:** Componente único com lógica incorporada  
-📝 **Justificativa:** Facilita a compreensão e manutenção
-
-### 📊 Modelo de Dados Simplificado
-
+#### Parent-to-Child (@Input)
 ```typescript
-interface Produto {
-  nome: string; // Apenas nome, sem ID único
-  preco: number; // Sem formatação complexa de moeda
-  disponivel: boolean; // Boolean simples
+// AppComponent passa dados para componentes filhos
+<app-produto-listar 
+  [produtos]="produtos"
+  (editarProduto)="onEditarProduto($event)">
+</app-produto-listar>
+```
+
+#### Child-to-Parent (@Output)
+```typescript
+// Componentes filhos emitem eventos para o pai
+@Output() produtoAdicionado = new EventEmitter<Produto>();
+
+adicionarProduto() {
+  this.produtoAdicionado.emit(this.produto);
 }
 ```
 
-### Campos Não Implementados:
-
-- ID único (usa índice do array)
-- Data de criação/atualização
-- Categoria do produto
-- Descrição detalhada
-- Imagens
-- Estoque/quantidade
-
-## 🎨 Simplificações de UI/UX
-
-### ✅ **Mantido (Funcional)**
-
-- Design responsivo básico
-- Feedback visual com toasts
-- Confirmações de ações
-- Validação de formulários
-- Efeitos visuais (ripple)
-
-### ❌ **Simplificado**
-
-- Sem paginação na tabela
-- Sem filtros/busca
-- Sem ordenação de colunas
-- Sem exportação de dados
-
-## 📈 Benefícios das Simplificações
-
-### ✅ **Vantagens**
-
-- **Rapidez no desenvolvimento** - Foco nos requisitos essenciais
-- **Facilidade de compreensão** - Código mais direto e legível
-- **Menor complexidade** - Ideal para fins didáticos
-- **Demonstração clara** - CRUD completo em um único local
-
-### ⚠️ **Limitações**
-
-- **Escalabilidade reduzida** - Não adequado para produção
-- **Reutilização limitada** - Componente monolítico
-- **Manutenção complexa** - Para projetos maiores
-
 ## 🎯 Requisitos Atendidos
 
-| Requisito          | Status | Implementação            |
-| ------------------ | ------  | ------------------------ |
-| Angular 19         | ✅     | Versão 19.2.0            |
-| Biblioteca UI      | ✅     | PrimeNG 19.1.3           |
-| CRUD Completo      | ✅     | Todas as operações       |
-| Modelo com 3 tipos | ✅     | string, number, boolean  |
-| Componentes UI     | ✅     | Extensivo uso do PrimeNG |
+| Requisito                    | Status | Implementação                    |
+| ---------------------------- | ------ | -------------------------------- |
+| Reutilizar projeto anterior | ✅     | Projeto Angular mantido          |
+| Biblioteca UI Angular        | ✅     | PrimeNG mantido e atualizado     |
+| Atualizar Angular/PrimeNG    | ✅     | Angular 19 + PrimeNG 19          |
+| Componentes separados        | ✅     | 5 componentes especializados     |
+| Comunicação @Input/@Output   | ✅     | Implementado em todos            |
+| Modelo com 3 tipos          | ✅     | string, number, boolean          |
 
-## 📈 Funcionalidades Avançadas Implementadas
+## 📈 Funcionalidades Mantidas e Melhoradas
 
 - **Validação de Formulários** com feedback visual
-- **Confirmação de Ações** destrutivas
+- **Confirmação de Ações** destrutivas  
 - **Notificações Toast** para feedback do usuário
 - **Interface Responsiva** para diferentes dispositivos
-- **Efeitos Visuais** com ripple nos botões
 - **Estado Reativo** com two-way data binding
+- **Componentização Completa** - nova funcionalidade!
+- **Comunicação Estruturada** - @Input/@Output
 
-## 🎯 Pontos de Destaque
+## 🎯 Pontos de Destaque da Refatoração
 
-- ✅ **Zero CSS customizado** - apenas Bulma + PrimeNG
-- ✅ **Componentização completa** - uso extensivo de componentes
-- ✅ **UX moderna** - feedback visual e interações fluidas
-- ✅ **Código limpo** - TypeScript com tipagem forte
-- ✅ **Responsive design** - funciona em mobile e desktop
+- ✅ **Arquitetura Componentizada** - separação clara de responsabilidades
+- ✅ **Comunicação Estruturada** - @Input/@Output bem definidos
+- ✅ **Manutenibilidade** - cada operação CRUD em componente próprio  
+- ✅ **Reutilização** - componentes podem ser usados independentemente
+- ✅ **Testabilidade** - cada componente testável isoladamente
+- ✅ **Organização** - estrutura de pastas clara e intuitiva
+- ✅ **Escalabilidade** - base sólida para futuras expansões
+
+## 🚀 Evolução do Projeto
+
+### Versão 1.0 (Atividade Anterior)
+- ✅ CRUD completo em um único componente
+- ✅ PrimeNG + Bulma CSS
+- ✅ Validações e feedback
+
+### Versão 2.0 (Atividade Atual) 
+- ✅ **Componentização total**
+- ✅ **Comunicação @Input/@Output**
+- ✅ **Separação de responsabilidades**
+- ✅ **Arquitetura escalável**
+- ✅ **Atualização para Angular 19**
+
+## 🎓 Conceitos Aprendidos
+
+### Angular Core
+- **Componentização** - criação de componentes especializados
+- **@Input decorator** - passagem de dados pai → filho  
+- **@Output decorator** - emissão de eventos filho → pai
+- **EventEmitter** - comunicação entre componentes
+- **Two-way data binding** - sincronização de dados
+
+### Arquitetura
+- **Separation of Concerns** - cada componente uma responsabilidade
+- **Single Responsibility Principle** - componentes focados
+- **Component Communication** - padrões de comunicação
+- **Event-driven Architecture** - baseado em eventos
 
 ---
 
