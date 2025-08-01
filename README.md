@@ -4,36 +4,44 @@
 
 **Repositório para a matéria de Aplicações com Interfaces Ricas, ofertada pelo curso de TADS no IFRN-CNAT no ano de 2025.1.**
 
-## 🛒 Gerenciador de Produtos - Angular + PrimeNG (Componentizado)
+## 🛒 Gerenciador de Produtos - Angular + PrimeNG + HttpClient
 
 ### 📋 Sobre o Projeto
 
-Uma aplicação web desenvolvida em **Angular 19** que implementa um sistema completo de **CRUD (Create, Read, Update, Delete)** para gerenciamento de produtos, agora **refatorado em componentes separados** com comunicação via **@Input e @Output**. Esta implementação atende aos requisitos da atividade de componentização da disciplina.
+Uma aplicação web desenvolvida em **Angular 19** que implementa um sistema completo de **CRUD (Create, Read, Update, Delete)** para gerenciamento de produtos. O projeto foi evoluído com uma arquitetura componentizada usando **@Input e @Output** e agora integra com um **backend Express.js** através de **serviços HTTP** para persistência de dados.
 
 ### 🎯 Objetivos da Atividade Atendidos
 
-✅ **Reutilizar projeto Angular da tarefa anterior**  
-✅ **Manter biblioteca de componentes UI Angular** (PrimeNG)  
-✅ **Atualizar para Angular 19 e PrimeNG 19**  
-✅ **Refatorar em componentes separados**: inserir, atualizar, detalhar e listar  
-✅ **Implementar comunicação com @Input e @Output**  
-✅ **Modelo com 3 tipos de atributos**: string, número e booleano
+✅ **Frontend e Backend na mesma máquina** - Localhost  
+✅ **Service para operações CRUD** - ProdutoService implementado  
+✅ **HttpClient para comunicação** - Todas as operações usam HTTP  
+✅ **Componentes especializados** - Inserir, Atualizar, Detalhar, Listar e Excluir  
+✅ **Comunicação @Input/@Output** - Entre componentes pai e filho  
+✅ **Modelo consistente** - Frontend e backend sincronizados
 
 ## 🚀 Tecnologias Utilizadas
 
+### Frontend
 - **Angular 19** - Framework principal
-- **PrimeNG 19** - Biblioteca de componentes UI (atualizada)
+- **PrimeNG 19** - Biblioteca de componentes UI
 - **TypeScript** - Linguagem de programação
+- **HttpClient** - Comunicação HTTP com backend
 - **RxJS** - Programação reativa
 - **FormsModule** - Manipulação de formulários
-- **@Input/@Output** - Comunicação entre componentes
+
+### Backend
+- **Node.js** - Runtime JavaScript
+- **Express.js** - Framework web
+- **CORS** - Cross-origin resource sharing
+- **Body-parser** - Parse de requisições JSON
 
 ## 📦 Modelo de Dados
 
-O projeto utiliza um modelo `Produto` com os seguintes atributos:
+O projeto utiliza um modelo `Produto` consistente entre frontend e backend:
 
 ```typescript
 export interface Produto {
+  id?: number; // Number - ID único (gerado pelo backend)
   nome: string; // String - Nome do produto
   preco: number; // Number - Preço em reais
   disponivel: boolean; // Boolean - Status de disponibilidade
@@ -42,12 +50,102 @@ export interface Produto {
 
 ## 🛠️ Funcionalidades Implementadas
 
-### ✨ Operações CRUD Completas
+### ✨ Operações CRUD Completas com Backend
 
 1. **📋 Listar Produtos**
+   - Carregamento via HTTP GET do backend
+   - Exibição em tabela responsiva com PrimeNG
+   - Atualização automática após operações
 
-   - Exibição em tabela responsiva
-   - Contador total de produtos
+2. **➕ Inserir Produto**
+   - Modal/Dialog para entrada de dados
+   - Validação de campos obrigatórios
+   - Envio via HTTP POST para o backend
+   - Feedback visual de sucesso/erro
+
+3. **✏️ Atualizar Produto**
+   - Preenchimento automático dos dados existentes
+   - Edição via HTTP PUT no backend
+   - Atualização da lista local após confirmação
+
+4. **👁️ Detalhar Produto**
+   - Visualização completa dos dados
+   - Modal somente leitura
+   - Informações formatadas
+
+5. **🗑️ Excluir Produto**
+   - Confirmação antes da exclusão
+   - Remoção via HTTP DELETE do backend
+   - Atualização da lista após confirmação
+
+## 🏗️ Arquitetura do Projeto
+
+### 📁 Estrutura de Componentes
+
+```
+src/app/
+├── model/
+│   └── produto.model.ts          # Interface do modelo
+├── produto.service.ts            # Service com HttpClient
+├── app.component.ts              # Componente principal
+├── produto-listar/              # Componente de listagem
+├── produto-inserir/             # Componente de inserção
+├── produto-atualizar/           # Componente de atualização
+├── produto-detalhar/            # Componente de detalhamento
+└── produto-excluir/             # Componente de exclusão
+```
+
+### 🔄 Service HTTP (ProdutoService)
+
+O service centraliza todas as operações HTTP:
+
+```typescript
+@Injectable({ providedIn: 'root' })
+export class ProdutoService {
+  private readonly apiUrl = 'http://localhost:3000/produtos';
+
+  listar(): Observable<Produto[]>
+  detalhar(id: number): Observable<Produto>
+  inserir(produto: Produto): Observable<Produto>
+  atualizar(produto: Produto): Observable<Produto>
+  remover(id: number): Observable<void>
+}
+```
+
+### 🌐 Backend API (Express.js)
+
+API REST completa rodando em `localhost:3000`:
+
+- **GET** `/produtos` - Lista todos os produtos
+- **GET** `/produtos/:id` - Detalha um produto específico
+- **POST** `/produtos` - Cria um novo produto
+- **PUT** `/produtos/:id` - Atualiza um produto existente
+- **DELETE** `/produtos/:id` - Remove um produto
+
+## 🔧 Como Executar
+
+### Pré-requisitos
+- Node.js instalado
+- Angular CLI instalado globalmente
+
+### 1. Iniciar o Backend
+```bash
+# Na raiz do projeto
+node server.js
+```
+O backend estará rodando em `http://localhost:3000`
+
+### 2. Iniciar o Frontend
+```bash
+# Dentro da pasta project
+cd project
+npm install  # se for a primeira vez
+npm start
+```
+O frontend estará rodando em `http://localhost:4200`
+
+### 3. Acessar a Aplicação
+Abra o navegador em `http://localhost:4200`
    - Indicadores visuais de disponibilidade
 
 2. **➕ Inserir Produto**
@@ -347,26 +445,101 @@ adicionarProduto() {
 - ✅ Validações e feedback
 
 ### Versão 2.0 (Atividade Atual) 
-- ✅ **Componentização total**
-- ✅ **Comunicação @Input/@Output**
-- ✅ **Separação de responsabilidades**
-- ✅ **Arquitetura escalável**
-- ✅ **Atualização para Angular 19**
+## 🔍 Comunicação entre Componentes
 
-## 🎓 Conceitos Aprendidos
+### Padrão @Input/@Output Implementado
 
-### Angular Core
-- **Componentização** - criação de componentes especializados
-- **@Input decorator** - passagem de dados pai → filho  
-- **@Output decorator** - emissão de eventos filho → pai
-- **EventEmitter** - comunicação entre componentes
-- **Two-way data binding** - sincronização de dados
+O projeto utiliza o padrão de comunicação Angular entre componentes:
 
-### Arquitetura
-- **Separation of Concerns** - cada componente uma responsabilidade
-- **Single Responsibility Principle** - componentes focados
-- **Component Communication** - padrões de comunicação
-- **Event-driven Architecture** - baseado em eventos
+#### AppComponent (Pai) → Componentes (Filhos)
+- **@Input** `produtos: Produto[]` - Lista de produtos
+- **@Input** `visible: boolean` - Controle de visibilidade dos modals
+- **@Input** `produto: Produto` - Produto selecionado para edição/visualização
+
+#### Componentes (Filhos) → AppComponent (Pai)
+- **@Output** `produtoSalvo: EventEmitter<Produto>` - Novo produto criado/atualizado
+- **@Output** `produtoExcluido: EventEmitter<Produto>` - Produto removido
+- **@Output** `visibleChange: EventEmitter<boolean>` - Mudança de estado do modal
+
+## 🛡️ Tratamento de Erros e Feedback
+
+### Sistema de Mensagens
+- **Toast/Notifications** - PrimeNG Toast para feedback visual
+- **Validação de Formulários** - Campos obrigatórios e validações
+- **Tratamento HTTP** - Captura e exibição de erros de API
+- **Loading States** - Indicadores de carregamento durante operações
+
+### Tipos de Feedback
+- ✅ **Sucesso** - Operações completadas com êxito
+- ❌ **Erro** - Problemas de comunicação ou validação
+- ⚠️ **Confirmação** - Diálogos de confirmação para exclusões
+
+## 📋 Principais Implementações desta Atividade
+
+### 🔧 Configuração HttpClient
+```typescript
+// app.config.ts
+providers: [
+  provideHttpClient(), // ← Habilitação do HttpClient
+  // outros providers...
+]
+```
+
+### 🔄 Integração Service-Component
+```typescript
+// app.component.ts
+constructor(
+  private readonly produtoService: ProdutoService // ← Injeção do service
+) {}
+
+// Operações agora usam o service ao invés de dados mockados
+onProdutoInserido(produto: Produto) {
+  this.produtoService.inserir(produto).subscribe({
+    next: (novoProduto) => {
+      this.produtos.push(novoProduto);
+      // feedback de sucesso
+    },
+    error: (error) => {
+      // tratamento de erro
+    }
+  });
+}
+```
+
+### 🌐 Backend Sincronizado
+- Campo `disponivel` adicionado no backend
+- APIs REST completas para todas as operações
+- CORS habilitado para comunicação frontend-backend
+- Dados persistem durante a sessão do servidor
+
+## ✅ Requisitos da Atividade Atendidos
+
+- ✅ **Frontend e Backend na mesma máquina** - Localhost
+- ✅ **Service para todas as operações CRUD** - ProdutoService implementado
+- ✅ **HttpClient para comunicação** - Substituição dos dados mockados
+- ✅ **Componentização mantida** - Arquitetura de componentes preservada
+- ✅ **Comunicação @Input/@Output** - Padrões de comunicação mantidos
+- ✅ **Tratamento de erros** - Feedback adequado para todas as operações
+- ✅ **Modelo consistente** - Frontend e backend sincronizados
+
+## 🎓 Conceitos Aplicados e Aprendidos
+
+### Angular Services & HTTP
+- **Injectable Services** - Injeção de dependências
+- **HttpClient** - Comunicação HTTP com backend
+- **Observable/RxJS** - Programação reativa para operações assíncronas
+- **Error Handling** - Tratamento adequado de erros HTTP
+
+### Arquitetura Full-Stack
+- **Separation of Concerns** - Frontend e Backend separados
+- **RESTful APIs** - Padrões REST para comunicação
+- **Data Consistency** - Modelos sincronizados entre camadas
+- **Service Layer** - Centralização da lógica de comunicação
+
+### Comunicação de Componentes
+- **@Input/@Output** - Comunicação pai-filho mantida
+- **EventEmitter** - Emissão de eventos personalizados
+- **Component Communication** - Padrões de arquitetura Angular
 
 ---
 

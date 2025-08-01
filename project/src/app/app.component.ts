@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Produto } from './model/produto.model';
+import { ProdutoService } from './produto.service';
 import { ProdutoListarComponent } from './produto-listar/produto-listar.component';
 import { ProdutoInserirComponent } from './produto-inserir/produto-inserir.component';
 import { ProdutoAtualizarComponent } from './produto-atualizar/produto-atualizar.component';
@@ -37,29 +38,29 @@ export class AppComponent implements OnInit {
   // Produto selecionado para edição/visualização/exclusão
   produtoSelecionado: Produto = { nome: '', preco: 0, disponivel: false };
 
-  constructor(private readonly messageService: MessageService) {}
+  constructor(
+    private readonly messageService: MessageService,
+    private readonly produtoService: ProdutoService
+  ) {}
 
   ngOnInit() {
-    this.produtos = [
-      {
-        id: 1,
-        nome: 'Notebook Gamer',
-        preco: 3500.0,
-        disponivel: true,
+    this.carregarProdutos();
+  }
+
+  private carregarProdutos() {
+    this.produtoService.listar().subscribe({
+      next: (produtos) => {
+        this.produtos = produtos;
       },
-      {
-        id: 2,
-        nome: 'Mouse sem Fio',
-        preco: 89.9,
-        disponivel: true,
-      },
-      {
-        id: 3,
-        nome: 'Teclado Mecânico',
-        preco: 299.99,
-        disponivel: false,
-      },
-    ];
+      error: (error) => {
+        console.error('Erro ao carregar produtos:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao carregar produtos',
+        });
+      }
+    });
   }
 
   // Eventos do componente de listagem
@@ -84,50 +85,74 @@ export class AppComponent implements OnInit {
 
   // Eventos do componente de inserção
   onProdutoInserido(produto: Produto) {
-    produto.id = this.createId();
-    this.produtos.push(produto);
-    this.produtos = [...this.produtos];
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Sucesso',
-      detail: 'Produto criado com sucesso!',
+    this.produtoService.inserir(produto).subscribe({
+      next: (novoProduto) => {
+        this.produtos.push(novoProduto);
+        this.produtos = [...this.produtos];
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Produto criado com sucesso!',
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao inserir produto:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao criar produto',
+        });
+      }
     });
   }
 
   // Eventos do componente de atualização
   onProdutoAtualizado(produto: Produto) {
-    const index = this.produtos.findIndex((p) => p.id === produto.id);
-    if (index > -1) {
-      this.produtos[index] = produto;
-      this.produtos = [...this.produtos];
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Sucesso',
-        detail: 'Produto atualizado com sucesso!',
-      });
-    }
+    this.produtoService.atualizar(produto).subscribe({
+      next: (produtoAtualizado) => {
+        const index = this.produtos.findIndex((p) => p.id === produto.id);
+        if (index > -1) {
+          this.produtos[index] = produtoAtualizado;
+          this.produtos = [...this.produtos];
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Produto atualizado com sucesso!',
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao atualizar produto:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao atualizar produto',
+        });
+      }
+    });
   }
 
   // Eventos do componente de exclusão
   onProdutoExcluido(produto: Produto) {
-    this.produtos = this.produtos.filter((p) => p.id !== produto.id);
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Sucesso',
-      detail: 'Produto excluído com sucesso!',
-    });
-  }
-
-  private createId(): number {
-    if (this.produtos.length === 0) {
-      return 1;
+    if (produto.id) {
+      this.produtoService.remover(produto.id).subscribe({
+        next: () => {
+          this.produtos = this.produtos.filter((p) => p.id !== produto.id);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Produto excluído com sucesso!',
+          });
+        },
+        error: (error) => {
+          console.error('Erro ao excluir produto:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao excluir produto',
+          });
+        }
+      });
     }
-    for (let i = 0; i < this.produtos.length; i++) {
-      if (this.produtos[i].id === i + 1) {
-        continue;
-      }
-      return i + 1;
-    }
-    return this.produtos.length + 1;
   }
 }
