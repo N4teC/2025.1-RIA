@@ -1,0 +1,64 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.field input,
+.field p-password {
+  width: 100%;
+}
+
+.field input.ng-invalid.ng-touched,
+.field p-password.ng-invalid.ng-touched {
+  border-color: #f56565;
+}
+
+.p-error {
+  display: block;
+  margin-top: 0.25rem;
+  color: #f56565;
+  font-size: 0.875rem;
+}
+
+.error-message {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.login-actions {
+  margin-top: 1.5rem;
+}
+
+.login-info {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  color: #666;
+  text-align: center;
+}
+
+.login-info p {
+  margin: 0.25rem 0;
+}

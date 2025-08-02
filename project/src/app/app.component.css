@@ -1,1 +1,18 @@
-/* Sem CSS customizado - usando apenas Bulma CSS + PrimeNG */
+/* Estilos para o toolbar */
+.toolbar-title {
+  color: #333;
+  font-weight: 600;
+  margin: 0;
+}
+
+.user-info {
+  color: #666;
+  font-weight: 500;
+}
+
+/* Ajusta o espaçamento da seção quando há toolbar */
+.section.with-toolbar {
+  padding-top: 1rem;
+}
+
+/* Sem CSS customizado adicional - usando Bulma CSS + PrimeNG */

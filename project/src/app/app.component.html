@@ -1,13 +1,35 @@
 <p-toast></p-toast>
 
-<section class="section">
+<!-- Toolbar de navegação (apenas se logado) -->
+<p-toolbar *ngIf="isLoggedIn$ | async">
+  <div class="p-toolbar-group-start">
+    <h2 class="toolbar-title">
+      <i class="pi pi-shopping-cart mr-2"></i>{{ title }}
+    </h2>
+  </div>
+  <div class="p-toolbar-group-end">
+    <span class="user-info mr-3" *ngIf="usuario$ | async as usuario">
+      Olá, {{ usuario.nome }}!
+    </span>
+    <p-button
+      label="Sair"
+      icon="pi pi-sign-out"
+      (onClick)="logout()"
+      severity="secondary"
+      size="small"
+    ></p-button>
+  </div>
+</p-toolbar>
+
+<section class="section" [class.with-toolbar]="isLoggedIn$ | async">
   <div class="container">
-    <div class="has-text-centered mb-5">
+    <!-- Título apenas para página de login -->
+    <div class="has-text-centered mb-5" *ngIf="!(isLoggedIn$ | async)">
       <h1 class="title is-2 has-text-primary">
         <i class="pi pi-shopping-cart mr-2"></i>Gerenciador de Produtos
       </h1>
       <p class="subtitle is-5 has-text-grey">
-        Operações CRUD com Componentes Separados e Rotas
+        Sistema de Gerenciamento com Autenticação JWT
       </p>
     </div>
 
