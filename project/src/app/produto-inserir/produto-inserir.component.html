@@ -1,17 +1,12 @@
-<p-dialog
-  [(visible)]="visible"
-  (visibleChange)="onVisibleChange($event)"
-  [style]="{ width: '450px' }"
-  header="Novo Produto"
-  [modal]="true"
-  class="p-fluid"
->
-  <ng-template pTemplate="content">
+<div class="container mt-5">
+  <p-toast></p-toast>
+  
+  <div class="box">
+    <h2 class="title is-4 has-text-primary">Novo Produto</h2>
+    
     <div class="content">
       <div class="field">
-        <label for="nome" class="label has-text-weight-semibold"
-          >Nome (String) *</label
-        >
+        <label for="nome" class="label has-text-weight-semibold">Nome (String) *</label>
         <div class="control">
           <input
             type="text"
@@ -31,9 +26,7 @@
       </div>
 
       <div class="field">
-        <label for="preco" class="label has-text-weight-semibold"
-          >Preço (Number) *</label
-        >
+        <label for="preco" class="label has-text-weight-semibold">Preço (Number) *</label>
         <div class="control">
           <p-inputNumber
             id="preco"
@@ -52,9 +45,7 @@
       </div>
 
       <div class="field">
-        <label for="disponivel" class="label has-text-weight-semibold"
-          >Disponível (Boolean)</label
-        >
+        <label for="disponivel" class="label has-text-weight-semibold">Disponível (Boolean)</label>
         <div class="field is-grouped">
           <div class="control">
             <p-inputSwitch
@@ -72,31 +63,29 @@
           </div>
         </div>
       </div>
-    </div>
-  </ng-template>
-
-  <ng-template pTemplate="footer">
-    <div class="field is-grouped is-grouped-right">
-      <div class="control">
-        <button
-          pButton
-          pRipple
-          label="Cancelar"
-          icon="pi pi-times"
-          class="p-button-text"
-          (click)="onCancelar()"
-        ></button>
-      </div>
-      <div class="control">
-        <button
-          pButton
-          pRipple
-          label="Criar"
-          icon="pi pi-check"
-          class="p-button-primary"
-          (click)="onSalvar()"
-        ></button>
+      
+      <div class="field is-grouped mt-5">
+        <div class="control">
+          <button
+            pButton
+            pRipple
+            label="Cancelar"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="onCancelar()"
+          ></button>
+        </div>
+        <div class="control">
+          <button
+            pButton
+            pRipple
+            label="Criar"
+            icon="pi pi-check"
+            class="p-button-primary"
+            (click)="onSalvar()"
+          ></button>
+        </div>
       </div>
     </div>
-  </ng-template>
-</p-dialog>
+  </div>
+</div>

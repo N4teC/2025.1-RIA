@@ -4,11 +4,11 @@
 
 **Repositório para a matéria de Aplicações com Interfaces Ricas, ofertada pelo curso de TADS no IFRN-CNAT no ano de 2025.1.**
 
-## 🛒 Gerenciador de Produtos - Angular + PrimeNG + HttpClient
+## 🛒 Gerenciador de Produtos - Angular + PrimeNG + HttpClient + Router
 
 ### 📋 Sobre o Projeto
 
-Uma aplicação web desenvolvida em **Angular 19** que implementa um sistema completo de **CRUD (Create, Read, Update, Delete)** para gerenciamento de produtos. O projeto foi evoluído com uma arquitetura componentizada usando **@Input e @Output** e agora integra com um **backend Express.js** através de **serviços HTTP** para persistência de dados.
+Uma aplicação web desenvolvida em **Angular 19** que implementa um sistema completo de **CRUD (Create, Read, Update, Delete)** para gerenciamento de produtos. O projeto foi evoluído com uma arquitetura componentizada usando **@Input e @Output** e agora integra com um **backend Express.js** através de **serviços HTTP** para persistência de dados. Nesta versão, foi implementado o **Angular Router** para navegação entre componentes.
 
 ### 🎯 Objetivos da Atividade Atendidos
 
@@ -16,7 +16,9 @@ Uma aplicação web desenvolvida em **Angular 19** que implementa um sistema com
 ✅ **Service para operações CRUD** - ProdutoService implementado  
 ✅ **HttpClient para comunicação** - Todas as operações usam HTTP  
 ✅ **Componentes especializados** - Inserir, Atualizar, Detalhar, Listar e Excluir  
-✅ **Comunicação @Input/@Output** - Entre componentes pai e filho  
+✅ **Comunicação @Input/@Output** - Entre componentes pai e filho (versão anterior)  
+✅ **Roteamento entre componentes** - Navegação baseada em rotas  
+✅ **Passagem de parâmetros entre rotas** - ID do produto enviado nas rotas  
 ✅ **Modelo consistente** - Frontend e backend sincronizados
 
 ## 🚀 Tecnologias Utilizadas
@@ -26,6 +28,7 @@ Uma aplicação web desenvolvida em **Angular 19** que implementa um sistema com
 - **PrimeNG 19** - Biblioteca de componentes UI
 - **TypeScript** - Linguagem de programação
 - **HttpClient** - Comunicação HTTP com backend
+- **Angular Router** - Navegação entre componentes
 - **RxJS** - Programação reativa
 - **FormsModule** - Manipulação de formulários
 
@@ -45,6 +48,40 @@ export interface Produto {
   nome: string; // String - Nome do produto
   preco: number; // Number - Preço em reais
   disponivel: boolean; // Boolean - Status de disponibilidade
+}
+```
+
+## 🧭 Rotas Implementadas
+
+A aplicação utiliza o Angular Router para navegação entre os componentes:
+
+| Rota | Componente | Descrição |
+|------|------------|-----------|
+| `/` | Redirecionamento | Redireciona para a listagem de produtos |
+| `/produtos` | ProdutoListarComponent | Lista todos os produtos |
+| `/produtos/novo` | ProdutoInserirComponent | Formulário para criar um novo produto |
+| `/produtos/editar/:id` | ProdutoAtualizarComponent | Formulário para editar um produto existente |
+| `/produtos/detalhar/:id` | ProdutoDetalharComponent | Visualização detalhada de um produto |
+| `/produtos/excluir/:id` | ProdutoExcluirComponent | Confirmação para excluir um produto |
+
+### Exemplo de passagem de parâmetros
+
+O ID do produto é passado como parte da URL para as rotas que precisam identificar um produto específico:
+
+```typescript
+// No componente de listagem (envio do ID)
+onEditarProduto(produto: Produto) {
+  this.router.navigate(['/produtos/editar', produto.id]);
+}
+
+// No componente de edição (recebimento do ID)
+ngOnInit() {
+  const id = Number(this.route.snapshot.paramMap.get('id'));
+  if (id) {
+    this.produtoService.detalhar(id).subscribe(produto => {
+      this.produto = produto;
+    });
+  }
 }
 ```
 

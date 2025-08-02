@@ -5,7 +5,12 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
-app.use(cors());
+// Configuração do CORS para permitir solicitações de qualquer origem
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(bodyParser.json());
 
 let produtos = [

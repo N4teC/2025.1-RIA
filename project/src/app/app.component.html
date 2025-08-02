@@ -7,43 +7,11 @@
         <i class="pi pi-shopping-cart mr-2"></i>Gerenciador de Produtos
       </h1>
       <p class="subtitle is-5 has-text-grey">
-        Operações CRUD com Componentes Separados
+        Operações CRUD com Componentes Separados e Rotas
       </p>
     </div>
 
-    <!-- Componente de Listagem -->
-    <app-produto-listar
-      [produtos]="produtos"
-      (novoProduto)="onNovoProduto()"
-      (editarProduto)="onEditarProduto($event)"
-      (excluirProduto)="onExcluirProduto($event)"
-      (detalharProduto)="onDetalharProduto($event)"
-    ></app-produto-listar>
+    <!-- Router Outlet -->
+    <router-outlet></router-outlet>
   </div>
 </section>
-
-<!-- Componente de Inserção -->
-<app-produto-inserir
-  [(visible)]="dialogInserir"
-  (produtoSalvo)="onProdutoInserido($event)"
-></app-produto-inserir>
-
-<!-- Componente de Atualização -->
-<app-produto-atualizar
-  [(visible)]="dialogAtualizar"
-  [produto]="produtoSelecionado"
-  (produtoAtualizado)="onProdutoAtualizado($event)"
-></app-produto-atualizar>
-
-<!-- Componente de Detalhes -->
-<app-produto-detalhar
-  [(visible)]="dialogDetalhar"
-  [produto]="produtoSelecionado"
-></app-produto-detalhar>
-
-<!-- Componente de Exclusão -->
-<app-produto-excluir
-  [(visible)]="dialogExcluir"
-  [produto]="produtoSelecionado"
-  (produtoExcluido)="onProdutoExcluido($event)"
-></app-produto-excluir>

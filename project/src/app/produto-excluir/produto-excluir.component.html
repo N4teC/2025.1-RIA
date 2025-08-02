@@ -1,11 +1,9 @@
-<p-dialog
-  [(visible)]="visible"
-  (visibleChange)="onVisibleChange($event)"
-  [style]="{ width: '450px' }"
-  header="Confirmar Exclusão"
-  [modal]="true"
->
-  <ng-template pTemplate="content">
+<div class="container mt-5">
+  <p-toast></p-toast>
+  
+  <div class="box">
+    <h2 class="title is-4 has-text-danger">Confirmar Exclusão</h2>
+    
     <div class="content">
       <div class="notification is-warning is-light">
         <p class="has-text-centered">
@@ -50,31 +48,29 @@
           ⚠️ Esta ação não pode ser desfeita!
         </p>
       </div>
-    </div>
-  </ng-template>
-
-  <ng-template pTemplate="footer">
-    <div class="field is-grouped is-grouped-right">
-      <div class="control">
-        <button
-          pButton
-          pRipple
-          label="Cancelar"
-          icon="pi pi-times"
-          class="p-button-text"
-          (click)="onCancelar()"
-        ></button>
-      </div>
-      <div class="control">
-        <button
-          pButton
-          pRipple
-          label="Confirmar Exclusão"
-          icon="pi pi-trash"
-          class="p-button-danger"
-          (click)="onConfirmar()"
-        ></button>
+      
+      <div class="field is-grouped mt-5">
+        <div class="control">
+          <button
+            pButton
+            pRipple
+            label="Cancelar"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="onCancelar()"
+          ></button>
+        </div>
+        <div class="control">
+          <button
+            pButton
+            pRipple
+            label="Confirmar Exclusão"
+            icon="pi pi-trash"
+            class="p-button-danger"
+            (click)="onConfirmar()"
+          ></button>
+        </div>
       </div>
     </div>
-  </ng-template>
-</p-dialog>
+  </div>
+</div>

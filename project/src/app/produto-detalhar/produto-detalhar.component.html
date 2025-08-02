@@ -1,11 +1,8 @@
-<p-dialog
-  [(visible)]="visible"
-  (visibleChange)="onVisibleChange($event)"
-  [style]="{ width: '500px' }"
-  header="Detalhes do Produto"
-  [modal]="true"
->
-  <ng-template pTemplate="content">
+<div class="container mt-5">
+  <p-toast></p-toast>
+  <div class="box">
+    <h2 class="title is-4 has-text-primary">Detalhes do Produto</h2>
+    
     <div class="content">
       <div class="field">
         <label class="label has-text-weight-semibold" for="produto-id">ID:</label>
@@ -44,21 +41,19 @@
           </span>
         </p>
       </div>
-    </div>
-  </ng-template>
-
-  <ng-template pTemplate="footer">
-    <div class="field is-grouped is-grouped-right">
-      <div class="control">
-        <button
-          pButton
-          pRipple
-          label="Fechar"
-          icon="pi pi-times"
-          class="p-button-secondary"
-          (click)="onFechar()"
-        ></button>
+      
+      <div class="field mt-5">
+        <div class="control">
+          <button
+            pButton
+            pRipple
+            label="Voltar"
+            icon="pi pi-arrow-left"
+            class="p-button-secondary"
+            (click)="onVoltar()"
+          ></button>
+        </div>
       </div>
     </div>
-  </ng-template>
-</p-dialog>
+  </div>
+</div>
